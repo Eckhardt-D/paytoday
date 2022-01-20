@@ -64,7 +64,7 @@ class PayTodaySDK {
     let amt: string = amount === -1 ? ' ' : (amount * 100).toFixed(2);
 
     if(!element) {
-      throw new Error("createButton requires the id of the element that would contain the button.");
+      throw new Error("createButton requires an HTML element that would contain the button.");
     }
 
     if(typeof document === "undefined") {
