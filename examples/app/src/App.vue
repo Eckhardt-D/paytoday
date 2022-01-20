@@ -10,7 +10,7 @@
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
-import { initializePaytoday } from "./assets/index.esm";
+import { initializePaytoday } from "paytoday";
 
 export default {
   name: "App",
