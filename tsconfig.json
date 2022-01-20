@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2015",                          
+    "module": "esnext",
+    "moduleResolution": "node",                     
+    "noEmitOnError": true,
+    "lib": ["es2017", "DOM"],                            
+    "strict": true,  
+    "esModuleInterop": false,                 
+    "outDir": "dist/.tsc-build",
+    "rootDir": "./"
+  }
+  ,
+  "include": ["./src/**/*.ts"]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "paytoday",
+  "version": "0.1.0",
+  "description": "A modern Javascript SDK for Namibia's Pay with PayToday",
+  "main": "dist/index.esm.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "keywords": [
+    "online payments",
+    "paytoday",
+    "PwPT"
+  ],
+  "author": "Eckhardt Dreyer <@eckhardtdreyer>",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.0",
+    "rollup": "^2.64.0",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4"
+  }
+}
