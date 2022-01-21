@@ -33,11 +33,11 @@ class PayTodaySDK {
             console.log(`
       PayToday SDK is running in debug mode,
       we will use the test credentials,
-      set { debug: false } or omit debug 
+      set { debug: false } or omit debug
       to run production."
       `);
-            this.config.businessId = '1663';
-            this.config.businessName = 'Test PwPT Business';
+            this.config.businessId = "1663";
+            this.config.businessName = "Test PwPT Business";
             this.url = this.stageURL;
         }
     }
@@ -52,7 +52,7 @@ class PayTodaySDK {
             script.addEventListener("load", () => {
                 window.document.dispatchEvent(new Event("DOMContentLoaded", {
                     bubbles: true,
-                    cancelable: true
+                    cancelable: true,
                 }));
                 return resolve(instance);
             });
@@ -68,10 +68,10 @@ class PayTodaySDK {
      * @param reference {String} Your unique reference
      * @param redirectURL {String} The url to redirect to when successfully paid.
      */
-    createButton(element, amount, reference, redirectURL = '') {
-        let amt = amount === -1 ? ' ' : (amount * 100).toFixed(2);
+    createButton(element, amount, reference, redirectURL = "") {
+        let amt = amount === -1 ? " " : (amount * 100).toFixed(2);
         if (!element) {
-            throw new Error("createButton requires the id of the element that would contain the button.");
+            throw new Error("createButton requires an HTML element that would contain the button.");
         }
         if (typeof document === "undefined") {
             throw new Error("PayToday createButton can only be called in a browser environment.");
@@ -97,7 +97,7 @@ class PayTodaySDK {
  * @param config {PayConfig} your PayToday business details.
  * @returns {void}
  */
-const initializePaytoday = ({ businessId, businessName, debug = false }) => __awaiter(void 0, void 0, void 0, function* () {
+const initializePaytoday = ({ businessId, businessName, debug = false, }) => __awaiter(void 0, void 0, void 0, function* () {
     if (!debug && (!businessId || !businessName)) {
         throw new Error("PayToday initialization failed, config parameters incorrect.");
     }
