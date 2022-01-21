@@ -1,6 +1,6 @@
 {
   "name": "paytoday",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A modern Javascript SDK for Namibia's Pay with PayToday",
   "main": "dist/index.esm.js",
   "types": "dist/index.d.ts",

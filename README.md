@@ -18,7 +18,11 @@ yarn add paytoday
 
 ### Browser
 
-We will provide a cdn link soon! But for now you can install with NPM and find the browser version in `node_modules/paytoday/dist/index.umd.js`.
+Use the following CDN link to include in your script tag in `<head>`:
+
+```
+https://unpkg.com/paytoday/dist/index.umd.js
+```
 
 ### Initialization
 
@@ -49,7 +53,7 @@ _browser_
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="./node_modules/paytoday/index.umd.js"></script>
+    <script src="https://unpkg.com/paytoday/dist/index.umd.js"></script>
   </head>
 
   <body>
