@@ -24,6 +24,10 @@ function __awaiter(thisArg, _arguments, P, generator) {
 }
 
 class PayTodaySDK {
+    /**
+     *
+     * @param {PayConfig} config The Paytoday businessId and businessName
+     */
     constructor(config) {
         this.prodURL = "https://paytoday.com.na/js/pay-with-paytoday.js";
         this.stageURL = "https://dev.paytoday.com.na/js/pay-with-paytoday.js";
@@ -41,32 +45,14 @@ class PayTodaySDK {
             this.url = this.stageURL;
         }
     }
-    static init(config) {
-        if (typeof document === "undefined") {
-            throw new Error("Cannot initialize PayToday in a non-browser environment.");
-        }
-        const instance = new PayTodaySDK(config);
-        const script = document.createElement("script");
-        script.src = instance.url;
-        return new Promise((resolve, reject) => {
-            script.addEventListener("load", () => {
-                window.document.dispatchEvent(new Event("DOMContentLoaded", {
-                    bubbles: true,
-                    cancelable: true,
-                }));
-                return resolve(instance);
-            });
-            script.addEventListener("error", reject);
-            document.head.appendChild(script);
-        });
-    }
     /**
-     *
+     * @description Creates the HTML button for PayToday checkout.
      * @param element {HTMLElement} The DOM element to insert the button into.
      * @param amount {Number} The amount of the transaction in NAD.
      * (use -1 to allow the user to input their own amount).
      * @param reference {String} Your unique reference
      * @param redirectURL {String} The url to redirect to when successfully paid.
+     * @returns {HTMLElement} The created HTML element
      */
     createButton(element, amount, reference, redirectURL = "") {
         let amt = amount === -1 ? " " : (amount * 100).toFixed(2);
@@ -93,18 +79,31 @@ class PayTodaySDK {
     }
 }
 /**
- * Creates the PayToday SDK instance.
- * @param config {PayConfig} your PayToday business details.
- * @returns {void}
+ * @description Creates the PayToday SDK instance.
+ * @param {PayConfig} config PayToday business details.
+ * @returns {Promise<PayTodaySDK>} The Paytoday instance!
  */
-const initializePaytoday = ({ businessId, businessName, debug = false, }) => __awaiter(void 0, void 0, void 0, function* () {
+const initializePaytoday = (config) => __awaiter(void 0, void 0, void 0, function* () {
+    const { debug, businessId, businessName } = config;
     if (!debug && (!businessId || !businessName)) {
         throw new Error("PayToday initialization failed, config parameters incorrect.");
     }
-    return yield PayTodaySDK.init({
-        businessId,
-        businessName,
-        debug,
+    if (typeof document === "undefined") {
+        throw new Error("Cannot initialize PayToday in a non-browser environment.");
+    }
+    const instance = new PayTodaySDK({ businessId, businessName, debug });
+    const script = document.createElement("script");
+    script.src = instance.url;
+    return new Promise((resolve) => {
+        script.addEventListener("load", () => {
+            window.document.dispatchEvent(new Event("DOMContentLoaded", {
+                bubbles: true,
+                cancelable: true,
+            }));
+            return resolve(instance);
+        });
+        script.addEventListener("error", () => resolve(instance));
+        document.head.appendChild(script);
     });
 });
 

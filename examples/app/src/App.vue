@@ -18,12 +18,10 @@ export default {
     HelloWorld,
   },
   async mounted() {
-    const payJS = await initializePaytoday({
-      debug: true,
-    });
-
-    const el = this.$refs.buttonContainer;
-    payJS.createButton(el, 1000, "test");
+    const paytoday = await initializePaytoday({ debug: true });
+    const element = this.$refs.buttonContainer;
+    const btnContainer = paytoday.createButton(element, 1000, "test");
+    console.log(btnContainer);
   },
 };
 </script>

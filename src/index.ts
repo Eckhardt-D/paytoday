@@ -1,7 +1,9 @@
+type DebugModes = true | false;
+
 type PayConfig = {
   businessId: string;
   businessName: string;
-  debug?: boolean;
+  debug?: DebugModes;
 };
 
 interface PayToday {
@@ -9,25 +11,29 @@ interface PayToday {
   readonly prodURL: string;
   readonly stageURL: string;
   config: PayConfig;
-  init?: (config: PayConfig) => Promise<PayToday>;
-  createButton: (
+  createButton(
     element: HTMLElement,
     amount: number,
     reference: string,
     redirectURL?: string
-  ) => HTMLElement;
+  ): HTMLElement;
 }
 
-type InitializePaytoday = (config: PayConfig) => Promise<PayToday>;
+type InitializePaytoday = (config: PayConfig) => Promise<PayTodaySDK>;
 
 class PayTodaySDK implements PayToday {
-  config: PayConfig;
+  declare config: PayConfig;
+
   public readonly url: string;
   public readonly prodURL: string =
     "https://paytoday.com.na/js/pay-with-paytoday.js";
   public readonly stageURL: string =
     "https://dev.paytoday.com.na/js/pay-with-paytoday.js";
 
+  /**
+   *
+   * @param {PayConfig} config The Paytoday businessId and businessName
+   */
   constructor(config: PayConfig) {
     this.config = config;
     this.url = this.prodURL;
@@ -46,42 +52,16 @@ class PayTodaySDK implements PayToday {
     }
   }
 
-  static init(config: PayConfig): Promise<PayToday> {
-    if (typeof document === "undefined") {
-      throw new Error(
-        "Cannot initialize PayToday in a non-browser environment."
-      );
-    }
-
-    const instance = new PayTodaySDK(config);
-    const script = document.createElement("script");
-
-    script.src = instance.url;
-
-    return new Promise((resolve, reject) => {
-      script.addEventListener("load", () => {
-        window.document.dispatchEvent(
-          new Event("DOMContentLoaded", {
-            bubbles: true,
-            cancelable: true,
-          })
-        );
-        return resolve(instance);
-      });
-      script.addEventListener("error", reject);
-      document.head.appendChild(script);
-    });
-  }
-
   /**
-   *
+   * @description Creates the HTML button for PayToday checkout.
    * @param element {HTMLElement} The DOM element to insert the button into.
    * @param amount {Number} The amount of the transaction in NAD.
    * (use -1 to allow the user to input their own amount).
    * @param reference {String} Your unique reference
    * @param redirectURL {String} The url to redirect to when successfully paid.
+   * @returns {HTMLElement} The created HTML element
    */
-  public createButton(
+  createButton(
     element: HTMLElement,
     amount: number,
     reference: string,
@@ -128,24 +108,41 @@ class PayTodaySDK implements PayToday {
 }
 
 /**
- * Creates the PayToday SDK instance.
- * @param config {PayConfig} your PayToday business details.
- * @returns {void}
+ * @description Creates the PayToday SDK instance.
+ * @param {PayConfig} config PayToday business details.
+ * @returns {Promise<PayTodaySDK>} The Paytoday instance!
  */
-export const initializePaytoday: InitializePaytoday = async ({
-  businessId,
-  businessName,
-  debug = false,
-}: PayConfig): Promise<PayToday> => {
+export const initializePaytoday: InitializePaytoday = async (
+  config: PayConfig
+): Promise<PayTodaySDK> => {
+  const { debug, businessId, businessName } = config;
+
   if (!debug && (!businessId || !businessName)) {
     throw new Error(
       "PayToday initialization failed, config parameters incorrect."
     );
   }
 
-  return await PayTodaySDK.init({
-    businessId,
-    businessName,
-    debug,
+  if (typeof document === "undefined") {
+    throw new Error("Cannot initialize PayToday in a non-browser environment.");
+  }
+
+  const instance = new PayTodaySDK({ businessId, businessName, debug });
+  const script = document.createElement("script");
+
+  script.src = instance.url;
+
+  return new Promise((resolve) => {
+    script.addEventListener("load", () => {
+      window.document.dispatchEvent(
+        new Event("DOMContentLoaded", {
+          bubbles: true,
+          cancelable: true,
+        })
+      );
+      return resolve(instance);
+    });
+    script.addEventListener("error", () => resolve(instance));
+    document.head.appendChild(script);
   });
 };
