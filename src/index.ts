@@ -9,7 +9,7 @@ interface PayToday {
   readonly prodURL: string;
   readonly stageURL: string;
   config: PayConfig;
-  init?: (config: PayConfig) => Promise<PayToday | any>;
+  init?: (config: PayConfig) => Promise<PayToday>;
   createButton: (
     element: HTMLElement,
     amount: number,
@@ -18,7 +18,7 @@ interface PayToday {
   ) => HTMLElement;
 }
 
-type InitializePaytoday = (config: PayConfig) => Promise<PayToday | any>;
+type InitializePaytoday = (config: PayConfig) => Promise<PayToday>;
 
 class PayTodaySDK implements PayToday {
   config: PayConfig;
@@ -46,7 +46,7 @@ class PayTodaySDK implements PayToday {
     }
   }
 
-  static init(config: PayConfig): Promise<PayToday | any> {
+  static init(config: PayConfig): Promise<PayToday> {
     if (typeof document === "undefined") {
       throw new Error(
         "Cannot initialize PayToday in a non-browser environment."
@@ -136,7 +136,7 @@ export const initializePaytoday: InitializePaytoday = async ({
   businessId,
   businessName,
   debug = false,
-}: PayConfig): Promise<PayToday | unknown> => {
+}: PayConfig): Promise<PayToday> => {
   if (!debug && (!businessId || !businessName)) {
     throw new Error(
       "PayToday initialization failed, config parameters incorrect."
