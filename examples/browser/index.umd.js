@@ -95,9 +95,21 @@ var PaytodaySDK = (function (exports) {
             throw new Error("Cannot initialize PayToday in a non-browser environment.");
         }
         const instance = new PayTodaySDK({ businessId, businessName, debug });
+        /**
+         * Do not create another script if it already exists,
+         * this is useful for HMR style apps.
+         */
+        if (document.getElementById("pt-sdk") != null) {
+            return Promise.resolve(instance);
+        }
         const script = document.createElement("script");
+        script.id = "pt-sdk";
         script.src = instance.url;
         return new Promise((resolve) => {
+            script.addEventListener("error", (error) => {
+                console.error(`Error initializing PayToday script: ${error.message}`);
+                return resolve(instance);
+            });
             script.addEventListener("load", () => {
                 window.document.dispatchEvent(new Event("DOMContentLoaded", {
                     bubbles: true,
@@ -105,7 +117,6 @@ var PaytodaySDK = (function (exports) {
                 }));
                 return resolve(instance);
             });
-            script.addEventListener("error", () => resolve(instance));
             document.head.appendChild(script);
         });
     });
