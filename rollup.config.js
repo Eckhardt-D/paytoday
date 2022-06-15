@@ -4,8 +4,8 @@ export default [
   {
     input: "src/index.ts",
     output: {
-      format: "esm",
-      file: "dist/index.esm.js",
+      format: "cjs",
+      file: "dist/index.js",
     },
     plugins: [typescript()],
   },
@@ -21,8 +21,8 @@ export default [
   {
     input: "src/index.ts",
     output: {
-      format: "esm",
-      file: "examples/app/src/assets/index.esm.js",
+      format: "cjs",
+      file: "examples/app/src/assets/index.js",
     },
     plugins: [typescript()],
   },

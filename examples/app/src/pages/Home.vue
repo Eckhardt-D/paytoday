@@ -22,7 +22,7 @@ export default {
   async mounted() {
     const paytoday = await initializePaytoday({ debug: true });
     const element = this.$refs.buttonContainer;
-     paytoday.createButton(element, 1000, "test");
+    paytoday.createButton(element, 1000, "test");
   },
 };
 </script>

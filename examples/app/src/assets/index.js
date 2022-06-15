@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -125,4 +129,4 @@ const initializePaytoday = (config) => __awaiter(void 0, void 0, void 0, functio
     });
 });
 
-export { initializePaytoday };
+exports.initializePaytoday = initializePaytoday;
