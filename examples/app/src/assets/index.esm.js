@@ -96,8 +96,9 @@ const initializePaytoday = (config) => __awaiter(void 0, void 0, void 0, functio
      * Do not create another script if it already exists,
      * this is useful for HMR style apps.
      */
-    if (document.getElementById("pt-sdk") != null) {
-        return Promise.resolve(instance);
+    const currentScript = document.getElementById("pt-sdk");
+    if (currentScript != null) {
+        currentScript.remove();
     }
     const script = document.createElement("script");
     script.id = "pt-sdk";
@@ -108,10 +109,16 @@ const initializePaytoday = (config) => __awaiter(void 0, void 0, void 0, functio
             return resolve(instance);
         });
         script.addEventListener("load", () => {
-            window.document.dispatchEvent(new Event("DOMContentLoaded", {
-                bubbles: true,
-                cancelable: true,
-            }));
+            /**
+             * Only fire event if the component
+             * has not been instantiated yet.
+             */
+            if (window.PTButtonComponent === undefined) {
+                window.document.dispatchEvent(new Event("DOMContentLoaded", {
+                    bubbles: true,
+                    cancelable: true,
+                }));
+            }
             return resolve(instance);
         });
         document.head.appendChild(script);
